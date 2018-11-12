@@ -1,2 +1,2 @@
-# the_go_programming_language_exercises
+# The go programming language exercises
 The execrises of book "The go programming language"
