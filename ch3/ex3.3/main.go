@@ -48,13 +48,25 @@ func main() {
 	maxZ := 0.0
 	minZ := 0.0
 	cellList := make([][][]float64, cells)
+
+	var zf zFunc
+	switch graphName {
+	case "saddle":
+		zf = saddle
+	case "eggbox":
+		zf = eggbox
+	default:
+		fmt.Fprintln(os.Stderr, "unknown graph name")
+		os.Exit(1)
+	}
+
 	for i := 0; i < cells; i++ {
 		cellList[i] = make([][]float64, cells)
 		for j := 0; j < cells; j++ {
-			ax, ay, az, err := corner(i+1, j, graphName)
-			bx, by, bz, err := corner(i, j, graphName)
-			cx, cy, cz, err := corner(i, j+1, graphName)
-			dx, dy, dz, err := corner(i+1, j+1, graphName)
+			ax, ay, az, err := corner(i+1, j, zf)
+			bx, by, bz, err := corner(i, j, zf)
+			cx, cy, cz, err := corner(i, j+1, zf)
+			dx, dy, dz, err := corner(i+1, j+1, zf)
 			if err != nil {
 				continue
 			}
@@ -106,20 +118,10 @@ func hex2rgb(color int) (int, int, int) {
 	return r, g, b
 }
 
-func corner(i, j int, graphName string) (float64, float64, float64, error) {
+func corner(i, j int, f zFunc) (float64, float64, float64, error) {
 	x := xyrange * (float64(i)/cells - 0.5)
 	y := xyrange * (float64(j)/cells - 0.5)
 
-	var f zFunc
-	switch graphName {
-	case "saddle":
-		f = saddle
-	case "eggbox":
-		f = eggbox
-	default:
-		fmt.Fprintln(os.Stderr, "unknown graph name")
-		os.Exit(1)
-	}
 	z := f(x, y)
 	if math.IsNaN(z) {
 		return 0, 0, 0, errors.New("invalid number")
