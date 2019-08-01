@@ -1,2 +1,2 @@
-# The go programming language exercises
-The execrises of book "The go programming language"
+# The solutions for Go Programming Language exercises
+The execrise solutions for book "The Go Programming Language"
