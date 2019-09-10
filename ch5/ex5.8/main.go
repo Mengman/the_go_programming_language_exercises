@@ -14,7 +14,7 @@ func main() {
 	id := os.Args[2]
 	doc, err := loadHtmlPage(url)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ElementByID: %v\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "ElementByID: %v\n", err)
 		os.Exit(1)
 	}
 	node := ElementByID(doc, id)
@@ -31,7 +31,7 @@ func loadHtmlPage(url string) (*html.Node, error) {
 		return nil, err
 	}
 	doc, err := html.Parse(resp.Body)
-	resp.Body.Close()
+	_ = resp.Body.Close()
 	if err != nil {
 		err = fmt.Errorf("parsing HTML: %s", err)
 		return nil, err
@@ -49,7 +49,7 @@ func forEachNode(n *html.Node, id *string, pre, post func(n *html.Node, id *stri
 	}
 
 	if !found {
-		for c := n.FirstChild; c!= nil; c = c.NextSibling {
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			node := forEachNode(c, id, pre, post)
 			if node != nil {
 				found = true
@@ -82,4 +82,3 @@ func findElementByID(n *html.Node, id *string) bool {
 	}
 	return false
 }
-
