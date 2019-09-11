@@ -61,7 +61,6 @@ func z4(z complex128) color.Color {
 
 func newton(z complex128, f cFun, fPrime cFun) color.Color {
 	const iterations = 37
-	const contrast = 7
 	for i := uint8(0); i < iterations; i++ {
 		z -= fPrime(z)
 		if cmplx.Abs(f(z)) < 1e-6 {
