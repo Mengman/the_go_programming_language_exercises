@@ -5,17 +5,19 @@ import (
 	"fmt"
 )
 
+const bitSize = 32 << (^uint(0) >> 63)
+
 type IntSet struct {
-	words []uint64
+	words []uint
 }
 
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/bitSize, uint(x%bitSize)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/bitSize, uint(x%bitSize)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -39,12 +41,12 @@ func (s *IntSet) String() string {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
+		for j := 0; j < bitSize; j++ {
 			if word&(1<<uint(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
-				fmt.Fprintf(&buf, "%d", 64*i+j)
+				fmt.Fprintf(&buf, "%d", bitSize*i+j)
 			}
 		}
 	}
@@ -60,7 +62,7 @@ func (s *IntSet) Len() int {
 	return num
 }
 
-func popCount(x uint64) int {
+func popCount(x uint) int {
 	count := 0
 	for x != 0 {
 		count++
@@ -71,17 +73,17 @@ func popCount(x uint64) int {
 
 func (s *IntSet) Remove(x int) {
 	if s.Has(x) {
-		word, bit := x/64, uint(x%64)
+		word, bit := x/bitSize, uint(x%bitSize)
 		s.words[word] &^= 1 << bit
 	}
 }
 
 func (s *IntSet) Clear() {
-	s.words = make([]uint64, 0)
+	s.words = make([]uint, 0)
 }
 
 func (s *IntSet) Copy() *IntSet {
-	words := make([]uint64, len(s.words))
+	words := make([]uint, len(s.words))
 	copy(words, s.words)
 	return &IntSet{
 		words: words,
@@ -89,6 +91,7 @@ func (s *IntSet) Copy() *IntSet {
 }
 
 func main() {
+	fmt.Printf("This is a %d-bit platform\n", bitSize)
 	s1 := IntSet{}
 	v := 3
 	fmt.Printf("s has value %d %v\n", v, s1.Has(v))
