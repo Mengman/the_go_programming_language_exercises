@@ -1,5 +1,8 @@
 package main
 
+// Exercis e 1.6: Mo dif y the Lissajous program to pro duce images in multiple colors by adding
+// more values to palette and then displaying them by changing the third argument of SetColorIndex
+// in some interesting way.
 import (
 	"image"
 	"image/color"

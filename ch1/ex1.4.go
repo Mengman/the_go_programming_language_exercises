@@ -1,4 +1,5 @@
 package main
+// Exercise 1.4: Modify dup2 to print the names of all file3s in which each duplicated line occurs.
 
 import (
 	"bufio"
