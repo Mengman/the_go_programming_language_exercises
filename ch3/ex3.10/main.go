@@ -1,21 +1,34 @@
 package main
 
+// Exercise 3.10: Write a non-rec ursive version of comma, using bytes.Buffer instead of string concatenation.
+
 import (
+	"bytes"
 	"flag"
 	"fmt"
 )
 
 func comma(s string) string {
+	var buf bytes.Buffer
+
 	if len(s) <= 3 {
 		return s
 	}
-	out := ""
+
 	n := 0
 	for ; n+3 <= len(s); n += 3 {
-		out += s[n:n+3] + ","
+		if n != 0 {
+			buf.WriteString(",")
+		}
+		buf.WriteString(s[n : n+3])
 	}
-	out += s[n:]
-	return out
+
+	if n < len(s)-1 {
+		buf.WriteString(",")
+		buf.WriteString(s[n:])
+	}
+
+	return buf.String()
 }
 
 func main() {
