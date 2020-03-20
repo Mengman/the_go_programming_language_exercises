@@ -11,21 +11,25 @@ import (
 func comma(s string) string {
 	var buf bytes.Buffer
 
+	var digitals []string
 	if len(s) <= 3 {
 		return s
 	}
 
-	n := 0
-	for ; n+3 <= len(s); n += 3 {
-		if n != 0 {
-			buf.WriteString(",")
+	n := len(s)
+	for ; n-3 >= 0; n -= 3 {
+		digitals = append(digitals, s[n-3:n])
+		if n-3 != 0 {
+			digitals = append(digitals, ",")
 		}
-		buf.WriteString(s[n : n+3])
 	}
 
-	if n < len(s)-1 {
-		buf.WriteString(",")
-		buf.WriteString(s[n:])
+	if n > 0 {
+		digitals = append(digitals, s[0:n])
+	}
+
+	for i := len(digitals) - 1; i >= 0; i-- {
+		buf.WriteString(digitals[i])
 	}
 
 	return buf.String()
