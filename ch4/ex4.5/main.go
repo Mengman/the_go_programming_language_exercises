@@ -1,5 +1,7 @@
 package main
 
+// Exercise 4.5: Write an in-place function to eliminate adjacent duplicates in a []string slice.
+
 import "fmt"
 
 func elimDup(strs []string) []string {
@@ -19,6 +21,6 @@ func elimDup(strs []string) []string {
 }
 
 func main() {
-	strs := []string{"a", "b", "c", "c", "c", "d", "d"}
+	strs := []string{"a", "b", "c", "c", "e", "c", "d", "d"}
 	fmt.Printf("%v\n", elimDup(strs))
 }
