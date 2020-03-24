@@ -1,7 +1,7 @@
 package popcount
 
 // Exercise 2.4: Write a version of PopCount that counts bits by shifting its argument through 64
-// bit positions, testing the rightmost bit each time. Compare its perfor mance to the table-lookup version.
+// bit positions, testing the rightmost bit each time. Compare its performance to the table-lookup version.
 
 // PopCount returns the population count (number of set bits) of x.
 func PopCount(x uint64) int {
