@@ -1,5 +1,8 @@
 package main
 
+// Exercise 5.15: Write variadic functions max and min, analogous to sum. What should these
+// functions do when called with no arguments? Write variants that require at least one argument.
+
 import (
 	"flag"
 	"fmt"
@@ -10,6 +13,11 @@ import (
 func main() {
 	flag.Parse()
 	strs := flag.Args()
+
+	if len(strs) < 1 {
+		fmt.Fprintln(os.Stderr, "input value number must greater or equal than 1")
+		os.Exit(1)
+	}
 	var numbers []int
 	for _, s := range strs {
 		n, err := strconv.Atoi(s)
@@ -25,6 +33,10 @@ func main() {
 }
 
 func max(vals ...int) int {
+	if len(vals) == 0 {
+		panic("max(vals ...int) vals length must be greater or equal than 1")
+	}
+
 	if len(vals) < 2 {
 		return vals[0]
 	}
@@ -40,6 +52,10 @@ func max(vals ...int) int {
 }
 
 func min(vals ...int) int {
+	if len(vals) == 0 {
+		panic("min(vals ...int) vals length must be greater or equal than 1")
+	}
+
 	if len(vals) < 2 {
 		return vals[0]
 	}
