@@ -33,6 +33,7 @@ func (r *RewindReader) rewind() {
 	r.ReadCloser = ioutil.NopCloser(bytes.NewBuffer(r.content))
 }
 
+//ElementsByTagName implement a non-recursion version breath first search 
 func ElementsByTagName(doc *html.Node, names ...string) (nodes []*html.Node) {
 	visited := make(map[*html.Node]struct{})
 	var queue []*html.Node
@@ -77,7 +78,7 @@ func getDoc(url string) (doc *html.Node) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Println("get page %s failed, status code %v", url, resp.StatusCode)
+		log.Printf("get page %s failed, status code %v\n", url, resp.StatusCode)
 		return
 	}
 
