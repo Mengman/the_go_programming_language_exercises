@@ -1,5 +1,10 @@
 package main
 
+// Exercise 8.5: Take an existing CPU-bound sequential program, such as the Mandelbrot
+// program of Section 3.3 or the 3-D surface computation of Section 3.2, and execute its main
+// loop in parallel using channels for communication. How much faster does it run on a
+// multiprocessor machine? What is the optimal number of goroutines to use?
+// compare with ex3.5
 import (
 	"fmt"
 	"image"
@@ -8,6 +13,8 @@ import (
 	"log"
 	"math/cmplx"
 	"os"
+	"runtime"
+	"sync"
 	"time"
 )
 
@@ -16,16 +23,32 @@ func main() {
 		xmin, ymin, xmax, ymax = -2, -2, +2, +2
 		width, height          = 1024, 1024
 	)
-	start := time.Now()
+
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	for py := 0; py < height; py++ {
-		y := float64(py)/height*(ymax-ymin) + ymin
-		for px := 0; px < width; px++ {
-			x := float64(px)/width*(xmax-xmin) + xmin
-			z := complex(x, y)
-			img.Set(px, py, mandelbrot(z))
-		}
+	start := time.Now()
+	wg := sync.WaitGroup{}
+	rows := make(chan int, height)
+	for row := 0; row < height; row++ {
+		rows <- row
 	}
+	close(rows)
+
+	worker_num := runtime.GOMAXPROCS(-1)
+	for i := 0; i < worker_num; i++ {
+		wg.Add(1)
+		go func() {
+			for py := range rows {
+				y := float64(py)/height*(ymax-ymin) + ymin
+				for px := 0; px < width; px++ {
+					x := float64(px)/width*(xmax-xmin) + xmin
+					z := complex(x, y)
+					img.Set(px, py, mandelbrot(z))
+				}
+			}
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 
 	f, err := os.Create("mandelbrot.png")
 	if err != nil {
