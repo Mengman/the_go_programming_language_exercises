@@ -36,7 +36,7 @@ func crawl(url string, depth int, wg *sync.WaitGroup) {
 	}
 
 	tokens <- struct{}{}
-	list, err := web.Extract(url, false)
+	list, err := web.Extract(url, false, "")
 	<-tokens
 	if err != nil {
 		log.Print(err)

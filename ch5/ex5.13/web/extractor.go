@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -26,7 +27,7 @@ func (r *RewindReader) rewind() {
 	r.ReadCloser = ioutil.NopCloser(bytes.NewBuffer(r.content))
 }
 
-func Extract(url string, savePage bool) ([]string, error) {
+func Extract(url string, savePage bool, savePath string) ([]string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func Extract(url string, savePage bool) ([]string, error) {
 	firstDomain := domains[0]
 	fileName := strings.Join(domains, "_") + ".html"
 	if savePage {
-		out, err := os.Create("./web/" + fileName)
+		out, err := os.Create(filepath.Join(savePath, fileName))
 		if err != nil {
 			return nil, err
 		}
